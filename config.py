@@ -37,7 +37,8 @@ class SinglenetConfig():
         log.debug("init Config")
         self.json_file = json_file
         self.conf_dict = {"Users": {}, "Sessions": []}
-        self.read(json_file)
+        self.read()
+        self.write()
 
     def __del__(self):
         log.debug("del Config")
@@ -52,7 +53,7 @@ class SinglenetConfig():
             try:
                 conf_dict = json.load(fp)
             except Exception as e:
-                os.remove(json_file)
+                # os.remove(json_file)
                 return {}
             else:
                 self.update(conf_dict)
@@ -99,13 +100,13 @@ class SinglenetConfig():
         self.conf_dict['password'] = value
         self.write()
 
-    def add_session(self, ip, uuid, username=None, t=datetime.datetime.now().isoformat()):
-        self.conf_dict["Sessions"].append({"ip": ip, "uuid": uuid, "username": username, "t": t})
+    def add_session(self, userip, uuid, username=None, t=datetime.datetime.now().isoformat()):
+        self.conf_dict["Sessions"].append({"userip": userip, "uuid": uuid, "username": username, "t": t})
         self.write()
 
-    def remove_session(self, ip, uuid):
+    def remove_session(self, userip, uuid):
         for i, session in enumerate(self.conf_dict["Sessions"]):
-            if ip == session['ip'] and uuid == session['uuid']:
+            if userip == session['userip'] and uuid == session['uuid']:
                 self.conf_dict.pop(i)
         self.write()
 
