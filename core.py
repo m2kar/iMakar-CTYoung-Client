@@ -25,8 +25,9 @@ class LoginError(Exception):
 
 
 def encrypt(str_old):
-    if not isinstance(str_old, (str,)):
+    if not isinstance(str_old, (str,unicode)):
         raise TypeError("function encrypt only receive str ,but str_old = {}".format(str_old))
+    str_old=str(str_old)
     str_old = str_old + (16 - len(str_old) % 16) * b"\x0A"
     ciphertext = AESTool.encrypt(str_old)
     arr = ["%02X" % ord(c) for c in ciphertext]
@@ -37,13 +38,13 @@ def encrypt(str_old):
 class User:
     def __init__(self, username, password):
         log.debug("User.__init__ :{} {}".format(username, password))
-        if not isinstance(username, str):
+        if not isinstance(username, (str,unicode)):
             raise TypeError("username must be str")
         username = username.strip()
         if not username:
             raise ValueError("username can't be blank")
         self.username = username
-        if not isinstance(password, str):
+        if not isinstance(password, (str,unicode)):
             raise TypeError("password must be str")
         password = password.strip()
         if not password:
@@ -68,13 +69,15 @@ class SinglenetSession(requests.Session):
         if user and not isinstance(user, User):
             raise TypeError("TypeError: SinglenetSession.user must be class User")
         self.user = user
-        if userip and not isinstance(userip, str):
+        if userip and not isinstance(userip, (str,unicode)):
             raise TypeError("TypeError: SinglenetSession.ip must be str")
-        elif self.illeagl_ip(userip):
+
+        elif self.illegal_ip(userip):
             log.error("illegal_ip :{}".format(userip))
             raise ValueError("ValueError: Wrong ip {}".format(userip))
+        # userip = str(userip)
         self.userip = userip
-        if uuid and not isinstance(uuid, str):
+        if uuid and not isinstance(uuid, (str,unicode)):
             raise TypeError("uuid type error: {}".format(uuid))
         self.uuid = uuid
         self.host = "219.148.205.34:8090"
@@ -113,7 +116,8 @@ class SinglenetSession(requests.Session):
         except (requests.ConnectionError, requests.ConnectTimeout) as e:
             raise NetworkError("{}".format(e))
         if not response.status_code == 200:
-            raise NetworkError
+            log.trace_error()
+            raise LoginError
         return response
 
     def request_uuid(self):
@@ -153,7 +157,7 @@ class SinglenetSession(requests.Session):
     def get_code_msg(code):
         msg_dict = {"71": u"账号密码错误",
                     "72": u"账号状态错误",
-                    "73": u"非法ip",
+                    "73": u"账号密码错误",
                     "74": u"ip不在范围内",
                     "150": u"注销成功",
                     "200": u"登陆成功",
@@ -161,7 +165,7 @@ class SinglenetSession(requests.Session):
         return msg_dict.get(str(code), u"未知错误:代码{}".format(code))
 
     @staticmethod
-    def illeagl_ip(ip):
+    def illegal_ip(ip):
         result = re.match(r'(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})', ip)
         if result:
             for each in result.groups():

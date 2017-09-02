@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 import json
 import os
 import datetime
+import time
 import const
 import log
 
@@ -36,13 +37,14 @@ class SinglenetConfig():
     def __init__(self, json_file=const.DATAFILE):
         log.debug("init Config")
         self.json_file = json_file
-        self.conf_dict = {"Users": {}, "Sessions": []}
+        self.conf_dict = {"Users": {"username":"","password":""}, "Sessions": []}
         self.read()
         self.write()
 
     def __del__(self):
         log.debug("del Config")
         self.write()
+
 
     def read(self, json_file=None):
         json_file = json_file or self.json_file
@@ -100,14 +102,14 @@ class SinglenetConfig():
         self.conf_dict['password'] = value
         self.write()
 
-    def add_session(self, userip, uuid, username=None, t=datetime.datetime.now().isoformat()):
+    def add_session(self, userip, uuid, username=None, t=time.time()):
         self.conf_dict["Sessions"].append({"userip": userip, "uuid": uuid, "username": username, "t": t})
         self.write()
 
     def remove_session(self, userip, uuid):
         for i, session in enumerate(self.conf_dict["Sessions"]):
             if userip == session['userip'] and uuid == session['uuid']:
-                self.conf_dict.pop(i)
+                self.conf_dict["Sessions"].pop(i)
         self.write()
 
     def remove_session_by_index(self, index):
@@ -116,9 +118,15 @@ class SinglenetConfig():
 
     @property
     def sessions(self):
-        return self.conf_dict['Sessions']
-
-
+        result=self.conf_dict['Sessions']
+        for each in result:
+            t=each.get("t", 0.0)
+            try:
+                dt=datetime.datetime.fromtimestamp(t)
+            except (TypeError,ValueError):
+                dt=datetime.datetime.fromtimestamp(0.0)
+            each["dt"]=dt.strftime("%c")
+        return result
 config = SinglenetConfig(const.DATAFILE)
 """
 [main]
@@ -128,7 +136,5 @@ SessionCount=3
 [User:0]
 username=edu000123
 password=hello
-
-[
 
 """
