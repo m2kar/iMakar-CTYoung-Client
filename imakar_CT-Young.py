@@ -50,21 +50,20 @@ class SinglenetMainApp:
         w.master.title(const.title)
 
         # width=master.winfo_reqwidth()
-        self.size = (280, 600)
+        self.size = (280, 700)
+
         master.maxsize(*self.size)
-        # master.minsize(*self.size)
+        master.minsize(self.size[0],300)
         # window.winfo_reqwidth
         # master.minsize(*self.size)
         master.resizable(0, 0)
         w.grid()
         self.w = w
         self.std_font=("微软雅黑",15)
-        Label(w, text="iMakar 闪讯登陆器", font=("微软雅黑",20), pady=20).grid()
+        Label(w, text="CT-Young 客户端", font=("微软雅黑",20), pady=20).grid()
         self.input_area()
         self.btn_area()
-        self.message = StringVar()
-        self.message.set("")
-        Message(w, textvariable=self.message, padx=10,width=self.size[0]-20,font=self.std_font[:1]).grid(columnspan=2,sticky=W+E)
+        self.message()
         self.help()
 
     def icon(self):
@@ -97,12 +96,37 @@ class SinglenetMainApp:
         help = Button(self.master, text="帮助  @imakar",relief=FLAT,command=lambda : HelpDialog(self.master).mainloop())
         help.grid(sticky=S)
 
+    def message(self):
+        self.message_box = StringVar()
+        self.max_message_width=36
+        self.max_message_height=10
+        self.min_message_height=3
+        # self.set_message("")
+        self.set_message("")
+        Message(self.w, textvariable=self.message_box, padx=10, width=self.size[0] - 20, font=("微软雅黑",8)).grid(
+            columnspan=2, sticky=W + E)
 
     def set_message(self, s):
-        self.message.set(s)
+        log.info("message: {}".format(s))
+        if not isinstance(s,(unicode,str)):
+            self.set_message("")
+        # s=""
+        a=[]
+        w=self.max_message_width
+        for each in s.splitlines():
+            i = 0
+            while i + w < len(each):
+                a.append(each[i:i + w])
+                i +=w
+            a.append(each[i:])
+        if len(a)>self.max_message_height:
+            log.info("message 溢出")
+            a=a[:self.max_message_height]
+        while not len(a)>=self.min_message_height:
+            a.append("")
+        self.message_box.set("\n".join(a))
 
     def login(self):
-
         threading.Thread(target=self._login).start()
 
     def _login(self):
@@ -123,7 +147,7 @@ class SinglenetMainApp:
             self.set_message("初始化错误!!:\n{}".format(e))
             log.trace_error()
         else:
-            self.message.set("")
+            self.set_message("")
             try:
                 result = s.login()
             except Exception as e:
@@ -153,7 +177,7 @@ class SinglenetMainApp:
                 if not select is None:
                     self.session_logout(sessions[select])
         except Exception as e:
-            self.message.set("注销初始化错误:{}".format(e))
+            self.set_message("注销初始化错误:{}".format(e))
             log.trace_error()
         finally:
             self.btn_logout.config(state=NORMAL)
@@ -242,9 +266,9 @@ class HelpDialog(Dialog):
         self.resizable(0,0)
         # img = ImageTk.PhotoImage(Image.open("qrcode.jpg"))
         # Label(master, image=img).grid()
-        self.message=StringVar()
-        self.message.set(const.help)
-        Message(master,textvariable=self.message).grid(row=0,column=0,rowspan=2)
+        self.help_message=StringVar()
+        self.help_message.set(const.help)
+        Message(master, textvariable=self.help_message).grid(row=0, column=0, rowspan=2)
         links=Frame(master)
         links.grid(row=0,column=1)
         mainpage="https://github.com/still-night/iMakar-CTYoung-Client"
@@ -252,7 +276,7 @@ class HelpDialog(Dialog):
         LinkLabel(links,text="项目主页",link=mainpage).grid()
         LinkLabel(links,text="作者博客",link="http://blog.csdn.net/still_night").grid()
         LinkLabel(links,text="获取更新",link=mainpage+"/releases").grid()
-        Label(links,text="作者:iMakar").grid()
+        Label(links,text="作者:iMakar , CMU小孩 ").grid()
         Label(links,text="邮箱:iMakar@qq.com").grid()
         Label(links,text=" ").grid()
         Label(links,text="微信公众平台").grid()
