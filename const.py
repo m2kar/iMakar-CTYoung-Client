@@ -8,7 +8,7 @@
 
 from os import getenv,sep
 temp=getenv("TEMP")
-name="imakar-ctyoung_"
+name="iMakar CT-Young"
 DEBUGLOGFILE = temp+sep+name+r"debug.log"
 INFOLOGFILE = temp+sep+name+r"info.log"
 ERRLOGFILE = temp+sep+name+r"err.log"

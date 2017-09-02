@@ -42,13 +42,13 @@ class User:
             raise TypeError("username must be str")
         username = username.strip()
         if not username:
-            raise ValueError("username can't be blank")
+            raise ValueError("用户名不能为空")
         self.username = username
         if not isinstance(password, (str,unicode)):
             raise TypeError("password must be str")
         password = password.strip()
         if not password:
-            raise ValueError("password can't be blank")
+            raise ValueError("密码不能为空")
         self.password = password
         self.encrypt_password()
 
@@ -74,7 +74,7 @@ class SinglenetSession(requests.Session):
 
         elif self.illegal_ip(userip):
             log.error("illegal_ip :{}".format(userip))
-            raise ValueError("ValueError: Wrong ip {}".format(userip))
+            raise ValueError("IP地址格式错误 {}\n请输入正确的IP地址\n比如 100.168.254.1".format(userip))
         # userip = str(userip)
         self.userip = userip
         if uuid and not isinstance(uuid, (str,unicode)):
@@ -157,8 +157,8 @@ class SinglenetSession(requests.Session):
     def get_code_msg(code):
         msg_dict = {"71": u"账号密码错误",
                     "72": u"账号状态错误",
-                    "73": u"账号密码错误",
-                    "74": u"ip不在范围内",
+                    "73": u"在线设备超出限制或账号密码错误",
+                    "74": u"ip不在范围内,请重新输入",
                     "150": u"注销成功",
                     "200": u"登陆成功",
                     "255": u"未知原因注销失败"}
