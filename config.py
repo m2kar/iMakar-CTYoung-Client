@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 """
-
+设置个人配置文件
+使用from config import config 来使用
 """
 #   @Time:  2017/8/30 21:24
 #   @Author:still_night@163.com
@@ -27,7 +28,7 @@ class SinglenetConfig():
         username
         password
     Sessions:
-        ip
+        userip
         uuid
         username
         t
@@ -47,6 +48,7 @@ class SinglenetConfig():
 
 
     def read(self, json_file=None):
+        """读取配置文件,并入内存中配置文件,如果出错则返回空"""
         json_file = json_file or self.json_file
         if not os.path.exists(json_file):
             log.debug("config.read(): {} not exist".format(json_file))
@@ -62,6 +64,7 @@ class SinglenetConfig():
                 return conf_dict
 
     def update(self, adict):
+        """使用dict来更新配置文件"""
         self.conf_dict["Users"].update(adict.get("Users", {}))
         for new in adict.get("Sessions", []):
             for old in self.conf_dict["Sessions"]:
@@ -72,6 +75,7 @@ class SinglenetConfig():
         self.write()
 
     def write(self, filename=None):
+        """重新写入配置文件"""
         filename = filename or self.json_file
         with open(filename, str("w+")) as fp:
             json.dump(self.conf_dict, fp, indent=4)
@@ -103,21 +107,25 @@ class SinglenetConfig():
         self.write()
 
     def add_session(self, userip, uuid, username=None, t=time.time()):
+        """添加一个登录记录"""
         self.conf_dict["Sessions"].append({"userip": userip, "uuid": uuid, "username": username, "t": t})
         self.write()
 
     def remove_session(self, userip, uuid):
+        """删除一个登陆记录"""
         for i, session in enumerate(self.conf_dict["Sessions"]):
             if userip == session['userip'] and uuid == session['uuid']:
                 self.conf_dict["Sessions"].pop(i)
         self.write()
 
     def remove_session_by_index(self, index):
+        """删除指定索引index的记录"""
         self.conf_dict["Sessions"].pop(index)
         self.write()
 
     @property
     def sessions(self):
+        """设定属性值 session为列表,并将时间戳t转化为dt"""
         result=self.conf_dict['Sessions']
         for each in result:
             t=each.get("t", 0.0)
@@ -128,13 +136,3 @@ class SinglenetConfig():
             each["dt"]=dt.strftime("%c")
         return result
 config = SinglenetConfig(const.DATAFILE)
-"""
-[main]
-UserCount=2
-SessionCount=3
-
-[User:0]
-username=edu000123
-password=hello
-
-"""

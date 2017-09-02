@@ -1,8 +1,7 @@
 欢迎安装  iMakar CTYoung客户端
 
-版本:0.2.0
 邮箱:iMakar@qq.com
-程序主页:https://github.com/still-night/iMakar-CTYoung-Login-Tool
+程序主页:https://github.com/still-night/iMakar-CTYoung-Client
 发布时间:2017年9月2日
 本程序适用于中国医科大学校园网CT-Young的登陆.
 
