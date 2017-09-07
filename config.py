@@ -22,6 +22,8 @@ import log
 # secs=cf.sections()
 
 # ConfigParser.ConfigParser()
+# os.unsetenv("APPDATA")
+
 class SinglenetConfig():
     """
     User:
@@ -37,7 +39,7 @@ class SinglenetConfig():
 
     def __init__(self, json_file=const.DATAFILE):
         log.debug("init Config")
-        self.json_file = json_file
+        self.json_file = self.set_json_fie(json_file)
         self.conf_dict = {"Users": {"username":"","password":""}, "Sessions": []}
         self.read()
         self.write()
@@ -45,6 +47,25 @@ class SinglenetConfig():
     def __del__(self):
         log.debug("del Config")
         self.write()
+
+    def set_json_fie(self,json_file):
+        if os.getenv("APPDATA"):
+            jsondir = os.getenv("APPDATA") + os.sep + const.DIR
+            # jsondir.encode()
+            if os.path.exists(jsondir):
+                if not os.path.isdir(jsondir):
+                    os.remove(jsondir)
+                    os.mkdir(jsondir)
+            else:
+                os.mkdir(jsondir)
+        else:
+            jsondir=os.getcwd()
+        return jsondir+os.sep+json_file
+
+        # rootdir=os.getenv("APPDATA")  or os.getcwdu()
+        # if os.path.exists(jsondir):
+        #     if os.path.isdir(jsondir):
+        #         os.mkdir(jsondir)
 
 
     def read(self, json_file=None):

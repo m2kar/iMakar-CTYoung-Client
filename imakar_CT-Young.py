@@ -5,13 +5,17 @@
 #   @Time:  2017/8/31 2:48
 #   @Author:still_night@163.com
 #   @File:  imakar_CT-Young.py
+
 from __future__ import unicode_literals
+
+import log
+
 from Tkinter import *
 from tkFont import Font
 from tkSimpleDialog import Dialog
 from webbrowser import open_new_tab
-from base64 import b64decode
-from os import getenv
+# from base64 import b64decode
+# from os import getenv
 import socket
 import re
 import threading
@@ -20,7 +24,6 @@ import time
 import const
 from core import User, SinglenetSession,NetworkError,LoginError
 from config import config
-import log
 
 def get_localip():
     try:
@@ -31,46 +34,40 @@ def get_localip():
         log.trace_error()
     return ""
 
-    # try:
-    #     ipList = socket.gethostbyname_ex(socket.gethostname())
-    #     for i in ipList:
-    #         # 过滤空序列、主机名和localIP（localIP不是业务地址发情况）
-    #         if i.find("100.")==0:
-    #             return i
-    # except Exception:
-    #     log.trace_error()
-    # return ""
 
 class SinglenetMainApp:
     def __init__(self, master):
         log.debug("init {}".format(self.__class__.__name__))
         self.master = master
-        self.icon()
         w = Frame(master,padx=20,pady=20)
         w.master.title(const.title)
 
-        # width=master.winfo_reqwidth()
         self.size = (280, 700)
 
         master.maxsize(*self.size)
         master.minsize(self.size[0],300)
-        # window.winfo_reqwidth
-        # master.minsize(*self.size)
         master.resizable(0, 0)
         w.grid()
         self.w = w
         self.std_font=("微软雅黑",15)
         Label(w, text="CT-Young 客户端", font=("微软雅黑",20), pady=20).grid()
+        self.icon()
         self.input_area()
         self.btn_area()
         self.message()
         self.help()
 
     def icon(self):
-        icopath=getenv('TEMP')+r'\imakar_ctyoung.ico'
-        with open(icopath,"w+") as fp:
-            fp.write(b64decode(const.str_ico))
-        self.master.iconbitmap(icopath)
+        log.debug("set icon")
+        icopath=r'network.ico'
+        # with open(icopath,"w+") as fp:
+        #     fp.write(b64decode(const.str_ico))
+        try:
+            self.master.iconbitmap(icopath)
+        except TclError as e:
+            log.error("icon set error {},{}".format(e,icopath))
+            self.master.iconbitmap()
+
 
     def btn_area(self):
         btns = Frame(self.w, padx=10, pady=20)
@@ -310,7 +307,12 @@ class LinkLabel(Label):
         log.info("open webpage {}".format(self.link))
 
 if __name__ == '__main__':
-    root = Tk()
-    img = PhotoImage(data=const.str_wxcode)
-    login = SinglenetMainApp(root)
-    root.mainloop()
+    try:
+        root = Tk()
+        img = PhotoImage(data=const.str_wxcode)
+        login = SinglenetMainApp(root)
+        root.mainloop()
+    except Exception as e:
+        log.trace_error()
+        log.error("异常退出 {}".format(e))
+        raise

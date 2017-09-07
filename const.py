@@ -7,6 +7,8 @@
 #   @File:  const.py
 
 from os import getenv,sep
+
+
 temp=getenv("TEMP")
 name="iMakar CT-Young"
 DEBUGLOGFILE = temp+sep+name+r"debug.log"
@@ -14,7 +16,7 @@ INFOLOGFILE = temp+sep+name+r"info.log"
 ERRLOGFILE = temp+sep+name+r"err.log"
 
 DATAFILE = r"ct-young.json"
-
+DIR=ur"iMakar CTYoung客户端"
 title="iMakar 闪讯"
 help="""本软件可以实现中国医科大学的CT-Young登陆.
         
