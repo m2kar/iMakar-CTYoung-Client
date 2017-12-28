@@ -15,6 +15,6 @@
 1. 安装python2.7
 2. 安装依赖包
     `pip install -r requirements.txt`
-3.python iMakar_CT-Young.py
+3. python iMakar_CT-Young.py
 
 ## 开发说明:
