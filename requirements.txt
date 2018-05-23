@@ -1,4 +1,0 @@
-Pillow
-pycrypto
-PyInstaller
-requests
