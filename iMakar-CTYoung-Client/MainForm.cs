@@ -37,6 +37,7 @@ namespace iMakar_CTYoung_Client
             txtPasswd.Text = setting.passwd;
             txtUsername.Text = setting.username;
             btnlogin.Enabled = false;
+            btnLogout.Enabled = true;
         }
 
         private void LoadStatusNotLogin()
