@@ -18,27 +18,28 @@ namespace iMakar_CTYoung_Client
         private const string strUA = "China Telecom Client";
         protected string username;
         protected string passwd;
-        protected string ip;
+        private string ip;
         protected string host;
-        protected string uuid;
+        private string uuid;
         protected string acname;
         protected string loginURL;
         protected string logoffURL;
         protected string en_passwd;
         protected HttpClient httpClient = new HttpClient();
         protected bool isLogin;
+        MD5CryptoServiceProvider md5csp = new MD5CryptoServiceProvider();
 
         public bool IsLogin { get { return isLogin; } }
 
-        public static CTYoung Init(string location, string ip, string username, string passwd)
+        public static CTYoung Init(string location, string ip, string username, string passwd, string uuid = "")
         {
             if (location == "辽宁")
             {
-                return new CTYoungLN(ip, username, passwd);
+                return new CTYoungLN(ip, username, passwd,uuid);
             }
             else if (location == "海南")
             {
-                return new CTYoungHN(ip, username, passwd);
+                return new CTYoungHN(ip, username, passwd,uuid);
             }
             else
             {
@@ -47,18 +48,20 @@ namespace iMakar_CTYoung_Client
 
         }
 
-        public CTYoung(string ip, string username, string passwd)
+        public CTYoung(string ip, string username, string passwd,string uuid)
         {
             if (!Is_ip_valid(ip)) throw new Exception("ip错误");
-            this.ip = ip;
+            this.Ip = ip;
             this.username = username;
+            //if(md5csp.ComputeHash()= "DD0682614B9FB737")
             this.passwd = passwd;
             this.en_passwd = Encrypt_passwd(passwd);
             httpClient.DefaultRequestHeaders.Add("User-Agent", strUA);
+            Uuid = uuid;
         }
         abstract protected string Location { get; }
 
-        static protected bool Is_ip_valid(string ip)
+        static public bool Is_ip_valid(string ip)
         {
             ip = ip.Trim(' ');
             string[] arr = ip.Split('.');
@@ -90,7 +93,7 @@ namespace iMakar_CTYoung_Client
         {
             //TODO encrypt passwd
             string key = Key;
-            byte[] mdk = (new MD5CryptoServiceProvider()).ComputeHash(Encoding.Default.GetBytes(key));
+            byte[] mdk = md5csp.ComputeHash(Encoding.Default.GetBytes(key));
             byte[] encrypted;
             using (Aes myAes = Aes.Create())
             {
@@ -113,6 +116,8 @@ namespace iMakar_CTYoung_Client
 
         abstract protected string ShowLoginUrl { get; }
         abstract protected string ShowLoginPostString { get; }
+        public string Uuid { get => uuid; protected set => uuid = value; }
+        public string Ip { get => ip; protected set => ip = value; }
 
         protected virtual bool DoRequestUuid()
         {
@@ -133,14 +138,20 @@ namespace iMakar_CTYoung_Client
             var redirect = xmlDocument.SelectSingleNode("/WISPAccessGatewayParam/Redirect");
             string msgType = redirect.SelectSingleNode("MessageType").InnerText;
             this.loginURL = redirect.SelectSingleNode("LoginURL").InnerText;
-            this.uuid = redirect.SelectSingleNode("Uuid").InnerText;
+            this.Uuid = redirect.SelectSingleNode("Uuid").InnerText;
             string responseCode = redirect.SelectSingleNode("ResponseCode").InnerText;
 
             Trace.TraceInformation(redirect.ToString());
             Debug.WriteLine($"msgType: {msgType}");
             Debug.WriteLine($"loginURL: {loginURL}");
-            Debug.WriteLine($"uuid : {uuid}");
+            Debug.WriteLine($"uuid : {Uuid}");
             Debug.WriteLine($"responseCode : {responseCode}");
+
+            if (responseCode != "0")
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -150,8 +161,8 @@ namespace iMakar_CTYoung_Client
 
             Uri uriLogin = new Uri(this.loginURL);
             Dictionary<string, string> dictLogin = new Dictionary<string, string>();
-            dictLogin["uuid"] = this.uuid;
-            dictLogin["userip"] = this.ip;
+            dictLogin["uuid"] = this.Uuid;
+            dictLogin["userip"] = this.Ip;
             dictLogin["username"] = this.username;
             dictLogin["password"] = this.en_passwd;
             if (acname!=null)
@@ -181,6 +192,12 @@ namespace iMakar_CTYoung_Client
             Debug.WriteLine($"msgType: {msgType}");
             Debug.WriteLine($"logoffURL: {logoffURL}");
             Debug.WriteLine($"responseCode : {responseCode}");
+
+            if (responseCode != "200")
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -190,8 +207,8 @@ namespace iMakar_CTYoung_Client
 
             Uri uriLogin = new Uri(this.logoffURL);
             Dictionary<string, string> dictLogout = new Dictionary<string, string>();
-            dictLogout["uuid"] = this.uuid;
-            dictLogout["userip"] = this.ip;
+            dictLogout["uuid"] = this.Uuid;
+            dictLogout["userip"] = this.Ip;
             if (this.acname != null)
             {
                 dictLogout["acname"] = acname;
@@ -219,23 +236,29 @@ namespace iMakar_CTYoung_Client
             Debug.WriteLine($"responseCode : {responseCode}");
             Debug.WriteLine($"date: {date}");
 
+            if (responseCode == "255")
+            {
+                return false;
+            }
+
             return true;
         }
 
 
-        public void Login()
+        public bool Login()
         {
             //获取uuid loginURL 
 
-            if (!DoRequestUuid()) return;
-            if (!DoRequestLogin()) return;
-
+            if (!DoRequestUuid()) return false;
+            if (!DoRequestLogin()) return false;
+            return true;
 
         }
-        public void Logout()
+        public bool Logout()
         {
             //TODO
-            if (!DoRequestLogout()) return;
+            if (!DoRequestLogout()) return false;
+            return true;
         }
 
 
@@ -249,7 +272,7 @@ namespace iMakar_CTYoung_Client
 
         protected override string Key { get { return key; } }
 
-        public CTYoungLN(string ip, string username, string passwd) : base(ip, username, passwd)
+        public CTYoungLN(string ip, string username, string passwd,string uuid) : base(ip, username, passwd,uuid)
         {
 
         }
@@ -261,12 +284,12 @@ namespace iMakar_CTYoung_Client
 
         protected override string ShowLoginPostString
         {
-            get { return "{\"wlanuserip\" : \"" + this.ip + "\" }"; }
+            get { return "{\"wlanuserip\" : \"" + this.Ip + "\" }"; }
         }
     }
     sealed class CTYoungHN : CTYoung
     {
-        public CTYoungHN(string ip, string username, string passwd) : base(ip, username, passwd)
+        public CTYoungHN(string ip, string username, string passwd,string uuid) : base(ip, username, passwd,uuid)
         {
             acname = hnacname;
         }
@@ -284,12 +307,12 @@ namespace iMakar_CTYoung_Client
         }
         protected override string ShowLoginUrl
         {
-            get { return showLoginUrl + $"?wlanuserip={ip}wlanacip={acname}"; }
+            get { return showLoginUrl + $"?wlanuserip={Ip}wlanacip={acname}"; }
         }
 
         protected override string ShowLoginPostString
         {
-            get { return $"{{\"wlanuserip\" : \"{this.ip}\"}}"; }
+            get { return $"{{\"wlanuserip\" : \"{this.Ip}\"}}"; }
         }
 
         protected override string Key { get { return key; } }
@@ -313,13 +336,19 @@ namespace iMakar_CTYoung_Client
             var redirect = xmlDocument.SelectSingleNode("/WISPAccessGatewayParam/Redirect");
             string msgType = redirect.SelectSingleNode("MessageType").InnerText;
             this.loginURL = redirect.SelectSingleNode("LoginURL").InnerText;
-            this.uuid = redirect.SelectSingleNode("Uuid").InnerText;
+            this.Uuid = redirect.SelectSingleNode("Uuid").InnerText;
             string responseCode = redirect.SelectSingleNode("ResponseCode").InnerText;
             Trace.TraceInformation(redirect.ToString());
             Debug.WriteLine($"msgType: {msgType}");
             Debug.WriteLine($"loginURL: {loginURL}");
-            Debug.WriteLine($"uuid : {uuid}");
+            Debug.WriteLine($"uuid : {Uuid}");
             Debug.WriteLine($"responseCode : {responseCode}");
+
+            if (responseCode != "0")
+            {
+                return false;
+            }
+
             return true;
         }
     }

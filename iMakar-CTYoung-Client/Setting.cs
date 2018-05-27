@@ -27,5 +27,11 @@ namespace iMakar_CTYoung_Client
             
             cbArea.Text = Properties.Settings.Default.location;
         }
+
+        private void llblAbout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.ShowDialog();
+        }
     }
 }

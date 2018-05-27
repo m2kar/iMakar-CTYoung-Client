@@ -6,13 +6,13 @@
       <Value Profile="(Default)">辽宁</Value>
     </Setting>
     <Setting Name="username" Type="System.String" Scope="User">
-      <Value Profile="(Default)">131313</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="passwd" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1234567496</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="isLogin" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="uuid" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

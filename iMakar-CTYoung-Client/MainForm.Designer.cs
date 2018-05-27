@@ -48,6 +48,7 @@
             this.cbIP.Name = "cbIP";
             this.cbIP.Size = new System.Drawing.Size(219, 33);
             this.cbIP.TabIndex = 0;
+            this.cbIP.SelectedIndexChanged += new System.EventHandler(this.cbIP_SelectedIndexChanged);
             // 
             // txtUsername
             // 
@@ -109,6 +110,7 @@
             this.btnLogout.TabIndex = 7;
             this.btnLogout.Text = "注销";
             this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // lblSetting
             // 
@@ -119,7 +121,6 @@
             this.lblSetting.TabIndex = 8;
             this.lblSetting.TabStop = true;
             this.lblSetting.Text = "设置";
-            this.lblSetting.Visible = false;
             this.lblSetting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblSetting_LinkClicked);
             // 
             // MainForm

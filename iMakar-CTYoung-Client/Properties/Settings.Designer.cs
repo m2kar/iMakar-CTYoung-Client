@@ -37,7 +37,7 @@ namespace iMakar_CTYoung_Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("131313")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string username {
             get {
                 return ((string)(this["username"]));
@@ -49,7 +49,7 @@ namespace iMakar_CTYoung_Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1234567496")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string passwd {
             get {
                 return ((string)(this["passwd"]));
@@ -61,7 +61,7 @@ namespace iMakar_CTYoung_Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool isLogin {
             get {
                 return ((bool)(this["isLogin"]));
