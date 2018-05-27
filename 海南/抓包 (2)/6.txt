@@ -1,0 +1,26 @@
+GET /xyportal/?wlanuserip=10.20.2.141&wlanacip=202.100.206.253 HTTP/1.1
+User-Agent: China Telecom Client
+Host: 124.225.128.205:10001
+Connection: Keep-Alive
+
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: text/xml;charset=utf-8
+Transfer-Encoding: chunked
+Date: Thu, 24 May 2018 08:58:59 GMT
+
+240
+<?xml version="1.0" encoding="UTF-8"?>
+<WISPAccessGatewayParam xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.acmewisp.com/WISPAccessGatewayParam.xsd">
+	<Redirect>
+		<AccessProcedure>1.0</AccessProcedure>
+		<AcName>202.100.206.253</AcName>
+		<UserIp>10.20.2.141</UserIp>
+		<LoginURL>http://124.225.128.205:10001/xyportal/wisp/login</LoginURL>
+		<Uuid>7ng50poqzhhxnseq272utya2d2r22eghbllp5r4fpphwxj13n53qvzwpim96r3v7</Uuid>
+		<MessageType>100</MessageType>
+		<ResponseCode>0</ResponseCode>
+	</Redirect>
+</WISPAccessGatewayParam>
+0
+

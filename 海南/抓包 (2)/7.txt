@@ -1,0 +1,19 @@
+GET / HTTP/1.1
+User-Agent: China Telecom Client
+Host: www.baidu.com
+Connection: Keep-Alive
+
+HTTP/1.1 200 OK
+Cache-control: no-cache
+Connection: close
+Content-Type: text/html
+Content-length: 369
+
+<html>
+<head>
+<script type="text/javascript">location.href="http://124.225.128.205:10001/xyportal/?wlanuserip=10.20.2.141&wlanacip=202.100.206.253"</script>
+</head>
+<body>
+Authentication is required. Click <a href="http://124.225.128.205:10001/xyportal/?wlanuserip=10.20.2.141&wlanacip=202.100.206.253">here</a> to open the authentication page.
+</body>
+</html>

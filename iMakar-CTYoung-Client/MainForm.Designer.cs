@@ -30,31 +30,32 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.cbIP = new System.Windows.Forms.ComboBox();
-            this.txtID = new System.Windows.Forms.TextBox();
+            this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtPasswd = new System.Windows.Forms.TextBox();
             this.btnlogin = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.lblSetting = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // cbIP
             // 
             this.cbIP.FormattingEnabled = true;
             this.cbIP.Location = new System.Drawing.Point(125, 34);
-            this.cbIP.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cbIP.Margin = new System.Windows.Forms.Padding(6);
             this.cbIP.Name = "cbIP";
             this.cbIP.Size = new System.Drawing.Size(219, 33);
             this.cbIP.TabIndex = 0;
             // 
-            // txtID
+            // txtUsername
             // 
-            this.txtID.Location = new System.Drawing.Point(125, 79);
-            this.txtID.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.txtID.Name = "txtID";
-            this.txtID.Size = new System.Drawing.Size(219, 33);
-            this.txtID.TabIndex = 1;
+            this.txtUsername.Location = new System.Drawing.Point(125, 79);
+            this.txtUsername.Margin = new System.Windows.Forms.Padding(6);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(219, 33);
+            this.txtUsername.TabIndex = 1;
             // 
             // txtPasswd
             // 
@@ -102,34 +103,49 @@
             // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(212, 175);
+            this.btnLogout.Location = new System.Drawing.Point(203, 175);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(132, 42);
             this.btnLogout.TabIndex = 7;
             this.btnLogout.Text = "注销";
             this.btnLogout.UseVisualStyleBackColor = true;
             // 
+            // lblSetting
+            // 
+            this.lblSetting.AutoSize = true;
+            this.lblSetting.Location = new System.Drawing.Point(341, 195);
+            this.lblSetting.Name = "lblSetting";
+            this.lblSetting.Size = new System.Drawing.Size(50, 25);
+            this.lblSetting.TabIndex = 8;
+            this.lblSetting.TabStop = true;
+            this.lblSetting.Text = "设置";
+            this.lblSetting.Visible = false;
+            this.lblSetting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblSetting_LinkClicked);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 229);
+            this.Controls.Add(this.lblSetting);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnlogin);
             this.Controls.Add(this.txtPasswd);
-            this.Controls.Add(this.txtID);
+            this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.cbIP);
             this.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "iMakar-CTYoung";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,13 +154,14 @@
         #endregion
 
         private System.Windows.Forms.ComboBox cbIP;
-        private System.Windows.Forms.TextBox txtID;
+        private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtPasswd;
         private System.Windows.Forms.Button btnlogin;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.LinkLabel lblSetting;
     }
 }
 
