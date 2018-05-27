@@ -7,7 +7,7 @@
   可以修改登陆IP以实现路由器的登陆  
 
 
-## 使用方
+## 使用方法
   在[Release](https://github.com/still-night/iMakar-CTYoung-Client/releases) 中下载最新的软件包  
   运行即可  
 
